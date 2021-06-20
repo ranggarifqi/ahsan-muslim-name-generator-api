@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/ranggarifqi/qashir-api/helper"
-	"github.com/ranggarifqi/qashir-api/src/response"
-	"github.com/ranggarifqi/qashir-api/src/url"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/helper"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/response"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/url"
 )
 
 type urlHandler struct {

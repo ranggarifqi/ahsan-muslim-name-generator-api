@@ -3,7 +3,7 @@ package url
 import (
 	"time"
 
-	"github.com/ranggarifqi/qashir-api/helper"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/helper"
 	"gorm.io/gorm"
 )
 

@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/ranggarifqi/qashir-api/helper"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/helper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

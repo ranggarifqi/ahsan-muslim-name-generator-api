@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/ranggarifqi/qashir-api/src/url"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/url"
 )
 
 type urlUsecase struct {

@@ -6,12 +6,11 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres_password
-      - POSTGRES_DB=postgres
     ports: 
       - 5433:5432
   api:
     restart: 'always'
-    image: ranggarifqi/qashir_api_dev:latest
+    image: ranggarifqi/ahsan_muslim_name_generator_api_dev:latest
     env_file: 
       - .env
     ports: 

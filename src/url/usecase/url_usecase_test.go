@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ranggarifqi/qashir-api/src/url"
-	"github.com/ranggarifqi/qashir-api/src/url/repository"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/url"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/url/repository"
 	"github.com/stretchr/testify/assert"
 )
 

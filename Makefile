@@ -30,7 +30,7 @@ run: build
 
 # Dev
 docker:
-	@docker build -f ./Dockerfile.dev -t ranggarifqi/qashir_api_dev:latest .
+	@docker build -f ./Dockerfile.dev -t ranggarifqi/ahsan_muslim_name_generator_api_dev:latest .
 
 run-docker: docker
 	@docker-compose up

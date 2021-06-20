@@ -1,4 +1,4 @@
-module github.com/ranggarifqi/qashir-api
+module github.com/ranggarifqi/ahsan-muslim-name-generator-api
 
 go 1.16
 

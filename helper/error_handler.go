@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
-	"github.com/ranggarifqi/qashir-api/src/response"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/response"
 )
 
 func HandleError(msg string, err error) {
