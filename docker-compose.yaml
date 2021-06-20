@@ -1,13 +1,19 @@
 version: "3"
 
+volumes:
+  ahsan-name-generator-data:
+
 services:
   postgres:
     image: "postgres:latest"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres_password
+      - POSTGRES_DB=ahsan_name_generator
     ports: 
       - 5433:5432
+    volumes: 
+      - ahsan-name-generator-data:/var/lib/postgresql/data/
   api:
     restart: 'always'
     image: ranggarifqi/ahsan_muslim_name_generator_api_dev:latest
