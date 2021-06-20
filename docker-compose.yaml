@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  postgres:
+    image: "postgres:latest"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres_password
+      - POSTGRES_DB=postgres
+    ports: 
+      - 5433:5432
+  api:
+    restart: 'always'
+    image: ranggarifqi/qashir_api_dev:latest
+    env_file: 
+      - .env
+    ports: 
+      - 3000:3000
+    depends_on: 
+      - "postgres"
