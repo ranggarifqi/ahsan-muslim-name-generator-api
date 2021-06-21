@@ -42,4 +42,8 @@ stop-docker:
 test:
 	go test -v ./...
 
-.PHONY: build run test
+# Bash
+bash:
+	@docker-compose exec api sh
+
+.PHONY: build run test bash
