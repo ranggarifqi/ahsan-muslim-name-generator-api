@@ -20,10 +20,10 @@ func upCreatetableusers(tx *sql.Tx) error {
 		id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
 		email VARCHAR(255) NOT NULL,
 		password VARCHAR(255) NOT NULL,
-		fullName VARCHAR(255) NOT NULL,
-		createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		deletedAt TIMESTAMP NULL
+		"fullName" VARCHAR(255) NOT NULL,
+		"createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		"updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		"deletedAt" TIMESTAMP NULL
 )`
 	_, err = tx.Exec(query)
 	helper.HandleError("Error create table users", err)

@@ -14,12 +14,12 @@ func init() {
 func upCreatetablenamemappings(tx *sql.Tx) error {
 	// This code is executed when the migration is applied.
 	query := `CREATE TABLE IF NOT EXISTS "nameMappings" (
-		nameId uuid NOT NULL,
-		nameTypeId uuid NOT NULL,
-		PRIMARY KEY(nameId, nameTypeId),
-		CONSTRAINT fk_name_id FOREIGN KEY(nameId) REFERENCES "names"(id)
+		"nameId" uuid NOT NULL,
+		"nameTypeId" uuid NOT NULL,
+		PRIMARY KEY("nameId", "nameTypeId"),
+		CONSTRAINT fk_name_id FOREIGN KEY("nameId") REFERENCES "names"(id)
 			ON DELETE CASCADE,
-		CONSTRAINT fk_name_type_id FOREIGN KEY(nameTypeId) REFERENCES "nameTypes"(id)
+		CONSTRAINT fk_name_type_id FOREIGN KEY("nameTypeId") REFERENCES "nameTypes"(id)
 			ON DELETE CASCADE
 	)`
 	_, err := tx.Exec(query)

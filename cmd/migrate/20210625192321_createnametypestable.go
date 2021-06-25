@@ -16,11 +16,11 @@ func upCreatenametypestable(tx *sql.Tx) error {
 	query := `CREATE TABLE IF NOT EXISTS "nameTypes" (
 		id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
 		name VARCHAR(255) NOT NULL,
-		createdBy uuid NULL,
-		updatedBy uuid NULL,
-		createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		deletedAt TIMESTAMP NULL
+		"createdBy" uuid NULL,
+		"updatedBy" uuid NULL,
+		"createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		"updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		"deletedAt" TIMESTAMP NULL
 	)`
 
 	_, err := tx.Exec(query)

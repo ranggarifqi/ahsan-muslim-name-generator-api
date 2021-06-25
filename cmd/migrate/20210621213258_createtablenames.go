@@ -17,12 +17,12 @@ func upCreatetablenames(tx *sql.Tx) error {
 		id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
 		name VARCHAR(255) NOT NULL,
 		gender VARCHAR(1) NOT NULL DEFAULT 'm',
-		isVerified BOOLEAN NOT NULL DEFAULT FALSE,
-		createdBy uuid NULL,
-		updatedBy uuid NULL,
-		createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		deletedAt TIMESTAMP NULL
+		"isVerified" BOOLEAN NOT NULL DEFAULT FALSE,
+		"createdBy" uuid NULL,
+		"updatedBy" uuid NULL,
+		"createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		"updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		"deletedAt" TIMESTAMP NULL
 )`
 	_, err := tx.Exec(query)
 	helper.HandleError("Error when creating table names", err)
