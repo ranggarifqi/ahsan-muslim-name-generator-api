@@ -13,7 +13,7 @@ func init() {
 
 func upCreatetablenames(tx *sql.Tx) error {
 	// This code is executed when the migration is applied.
-	query := `CREATE TABLE IF NOT EXISTS names (
+	query := `CREATE TABLE IF NOT EXISTS "names" (
 		id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
 		name VARCHAR(255) NOT NULL,
 		gender VARCHAR(1) NOT NULL DEFAULT 'm',
@@ -32,7 +32,7 @@ func upCreatetablenames(tx *sql.Tx) error {
 
 func downCreatetablenames(tx *sql.Tx) error {
 	// This code is executed when the migration is rolled back.
-	_, err := tx.Exec("DROP TABLE IF EXISTS names")
+	_, err := tx.Exec(`DROP TABLE IF EXISTS "names"`)
 	helper.HandleError("Error when dropping table names", err)
 	return nil
 }
