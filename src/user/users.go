@@ -18,6 +18,7 @@ type User struct {
 
 type IUserRepository interface {
 	FindById(id string) (*User, error)
+	FindOne(query interface{}, data ...interface{}) (*User, error)
 }
 
 type IUserUsecase interface {
