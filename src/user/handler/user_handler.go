@@ -31,26 +31,3 @@ func (uh *userHandler) FindById(c echo.Context) error {
 		Data:       *res,
 	})
 }
-
-func (uh *userHandler) SignIn(c echo.Context) error {
-	payload := new(user.SignInDTO)
-	err := c.Bind(payload)
-	if err != nil {
-		return helper.HandleHttpError(c, err, http.StatusInternalServerError)
-	}
-
-	if err = c.Validate(payload); err != nil {
-		return helper.HandleHttpError(c, err, http.StatusBadRequest)
-	}
-
-	res, err := uh.uc.SignIn(payload)
-	if err != nil {
-		return helper.HandleHttpError(c, err, http.StatusUnauthorized)
-	}
-
-	return c.JSON(http.StatusOK, response.SuccessResponse{
-		StatusCode: http.StatusOK,
-		Message:    "User signed in successfully",
-		Data:       *res,
-	})
-}

@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/database/postgresql"
+	authH "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/auth/handler"
 	userH "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user/handler"
 	userRepo "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user/repository"
 	userUC "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user/usecase"
@@ -41,6 +42,8 @@ func main() {
 	userRepository := userRepo.NewUserRepository(db)
 	userUsecase := userUC.NewUserUsecase(userRepository)
 	userH.NewUserHandler(v1Group, userUsecase)
+
+	authH.NewAuthHandler(v1Group, userUsecase)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%v", os.Getenv("PORT"))))
 }
