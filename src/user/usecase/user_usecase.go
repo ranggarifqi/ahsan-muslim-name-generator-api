@@ -53,6 +53,7 @@ func (uuc *userUsecase) SignIn(payload *user.SignInDTO) (*user.SignInResult, err
 			UpdatedAt: foundUser.UpdatedAt,
 			DeletedAt: foundUser.DeletedAt.Time,
 		},
+		Token: "asdasdasdsadasd",
 	}
 
 	return res, nil
