@@ -1,7 +1,12 @@
 package usecase
 
 import (
+	"os"
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/helper"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/jwtauth"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user"
 )
 
@@ -27,7 +32,6 @@ func (uuc *userUsecase) FindById(id string) (*user.UserWithoutPassword, error) {
 		FullName:  u.FullName,
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
-		DeletedAt: u.DeletedAt.Time,
 	}
 
 	return res, nil
@@ -44,6 +48,19 @@ func (uuc *userUsecase) SignIn(payload *user.SignInDTO) (*user.SignInResult, err
 		return nil, err
 	}
 
+	jwtSecret := os.Getenv("JWT_SECRET")
+
+	claims := jwtauth.JwtClaims{
+		UserID: foundUser.ID,
+		Email:  foundUser.Email,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 2).Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenStr, err := token.SignedString([]byte(jwtSecret))
+
 	res := &user.SignInResult{
 		UserWithoutPassword: user.UserWithoutPassword{
 			ID:        foundUser.ID,
@@ -51,9 +68,8 @@ func (uuc *userUsecase) SignIn(payload *user.SignInDTO) (*user.SignInResult, err
 			FullName:  foundUser.FullName,
 			CreatedAt: foundUser.CreatedAt,
 			UpdatedAt: foundUser.UpdatedAt,
-			DeletedAt: foundUser.DeletedAt.Time,
 		},
-		Token: "asdasdasdsadasd",
+		Token: tokenStr,
 	}
 
 	return res, nil
