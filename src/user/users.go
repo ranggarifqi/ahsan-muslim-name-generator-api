@@ -24,5 +24,4 @@ type IUserRepository interface {
 
 type IUserUsecase interface {
 	FindById(id string) (*UserWithoutPassword, error)
-	SignIn(payload *SignInDTO) (*SignInResult, error)
 }

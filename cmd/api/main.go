@@ -38,10 +38,6 @@ func main() {
 
 	v1Group := e.Group("/api/v1")
 
-	// urlRepository := urlRepo.NewUrlRepository(db)
-	// urlUsecase := urlUC.NewUrlUsecase(urlRepository)
-	// urlH.NewUrlHandler(v1Group, urlUsecase)
-
 	bcryptService := passwordHasherService.NewBcryptService()
 	jwtAuthService := authService.NewJwtService()
 
