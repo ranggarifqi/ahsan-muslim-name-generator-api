@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -34,6 +35,7 @@ func (h *authHandler) SignIn(c echo.Context) error {
 
 	res, err := h.userUsecase.SignIn(payload)
 	if err != nil {
+		err = errors.New("Incorrect email or password!")
 		return helper.HandleHttpError(c, err, http.StatusUnauthorized)
 	}
 
