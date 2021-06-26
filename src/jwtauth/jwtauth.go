@@ -5,8 +5,12 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-type JwtClaims struct {
+type JwtClaim struct {
 	UserID uuid.UUID `json:"userId"`
 	Email  string    `json:"email"`
 	jwt.StandardClaims
+}
+
+type IJwtAuthService interface {
+	GetJWTToken(claim *JwtClaim) (string, error)
 }

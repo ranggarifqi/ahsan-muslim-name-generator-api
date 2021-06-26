@@ -6,24 +6,24 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/helper"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/auth"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/response"
-	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user"
 )
 
 type authHandler struct {
-	userUsecase user.IUserUsecase
+	authUsecase auth.IAuthUsecase
 }
 
-func NewAuthHandler(g *echo.Group, uuc user.IUserUsecase) {
+func NewAuthHandler(g *echo.Group, auc auth.IAuthUsecase) {
 	handler := &authHandler{
-		userUsecase: uuc,
+		authUsecase: auc,
 	}
 
 	g.POST("/signin", handler.SignIn)
 }
 
 func (h *authHandler) SignIn(c echo.Context) error {
-	payload := new(user.SignInDTO)
+	payload := new(auth.SignInDTO)
 	err := c.Bind(payload)
 	if err != nil {
 		return helper.HandleHttpError(c, err, http.StatusInternalServerError)
@@ -33,7 +33,7 @@ func (h *authHandler) SignIn(c echo.Context) error {
 		return helper.HandleHttpError(c, err, http.StatusBadRequest)
 	}
 
-	res, err := h.userUsecase.SignIn(payload)
+	res, err := h.authUsecase.SignIn(payload)
 	if err != nil {
 		err = errors.New("Incorrect email or password!")
 		return helper.HandleHttpError(c, err, http.StatusUnauthorized)

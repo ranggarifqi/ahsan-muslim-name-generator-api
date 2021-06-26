@@ -50,7 +50,7 @@ func (uuc *userUsecase) SignIn(payload *user.SignInDTO) (*user.SignInResult, err
 
 	jwtSecret := os.Getenv("JWT_SECRET")
 
-	claims := jwtauth.JwtClaims{
+	claims := jwtauth.JwtClaim{
 		UserID: foundUser.ID,
 		Email:  foundUser.Email,
 		StandardClaims: jwt.StandardClaims{
