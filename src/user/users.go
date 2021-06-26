@@ -11,10 +11,10 @@ type User struct {
 	ID        uuid.UUID      `json:"id"`
 	Email     string         `json:"email"`
 	Password  string         `json:"password"`
-	FullName  string         `json:"fullName"`
-	CreatedAt time.Time      `json:"createdAt"`
-	UpdatedAt time.Time      `json:"updatedAt"`
-	DeletedAt gorm.DeletedAt `json:"deletedAt" gorm:"index"`
+	FullName  string         `json:"fullName" gorm:"column:fullName"`
+	CreatedAt time.Time      `json:"createdAt" gorm:"column:createdAt"`
+	UpdatedAt time.Time      `json:"updatedAt" gorm:"column:updatedAt"`
+	DeletedAt gorm.DeletedAt `json:"deletedAt" gorm:"index;column:deletedAt"`
 }
 
 type IUserRepository interface {
