@@ -20,7 +20,6 @@ func HandleHttpError(c echo.Context, err error, code int) error {
 	message := err.Error()
 
 	if e, ok := err.(*echo.HTTPError); ok {
-		statusCode = e.Code
 		message = fmt.Sprint(e.Message)
 	}
 
