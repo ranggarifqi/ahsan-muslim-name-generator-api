@@ -24,9 +24,9 @@ func (ur *userRepository) FindById(id string) (*user.User, error) {
 	return &res, nil
 }
 
-func (ur *userRepository) FindOne(query interface{}, args ...interface{}) (*user.User, error) {
+func (ur *userRepository) FindOne(query interface{}, data ...interface{}) (*user.User, error) {
 	var res user.User
-	err := ur.conn.Where(query, args).First(&res).Error
+	err := ur.conn.Where(query, data).First(&res).Error
 	if err != nil {
 		return nil, err
 	}
