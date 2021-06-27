@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -65,6 +66,39 @@ func Test_User_handler_FindById(t *testing.T) {
 			assert.Equal(t, http.StatusOK, res.StatusCode)
 			assert.Equal(t, "Data fetched successfully", res.Message)
 			assert.Equal(t, id.String(), resData["id"])
+		}
+	})
+
+	t.Run("Should return not found error if ID is not found", func(t *testing.T) {
+		randomID, _ := uuid.NewV4()
+
+		/* Setup mocks */
+		mocks := setupMock()
+		mocks.mockUserRepository.On("FindById", randomID.String()).Return(nil, errors.New("record not found"))
+
+		/* Setup Handler */
+		userUsecase := userUC.NewUserUsecase(mocks.mockUserRepository)
+		handler := UserHandler{
+			uc: userUsecase,
+		}
+
+		/* Setup request */
+		e := testutil.SetupServer()
+
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/users/:id", nil)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("id")
+		ctx.SetParamValues(randomID.String())
+
+		/* Assertions */
+		if assert.NoError(t, handler.FindById(ctx)) {
+			res := response.ErrorResponse{}
+			json.Unmarshal([]byte(rec.Body.String()), &res)
+
+			assert.Equal(t, http.StatusNotFound, rec.Code)
+			assert.Equal(t, http.StatusNotFound, res.StatusCode)
+			assert.Equal(t, "User not found", res.Message)
 		}
 	})
 }

@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -23,7 +25,9 @@ func NewUserHandler(g *echo.Group, uc user.IUserUsecase) {
 func (uh *UserHandler) FindById(c echo.Context) error {
 	id := c.Param("id")
 	res, err := uh.uc.FindById(id)
+	fmt.Println(res, err)
 	if err != nil {
+		err := errors.New("User not found")
 		return helper.HandleHttpError(c, err, http.StatusNotFound)
 	}
 	return c.JSON(http.StatusOK, response.SuccessResponse{
