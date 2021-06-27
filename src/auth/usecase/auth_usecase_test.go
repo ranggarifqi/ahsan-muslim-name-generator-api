@@ -14,27 +14,28 @@ import (
 )
 
 func Test_Auth_Usecase_SignIn(t *testing.T) {
+	email := "test@ranggarifqi.com"
+	id, _ := uuid.NewV4()
+	fullName := "Test User"
+
+	findOneResult := &user.User{
+		ID:       id,
+		Email:    email,
+		Password: "thisisanencryptedpassword",
+		FullName: fullName,
+	}
+
 	t.Run("Should return correct value on successfull sign in", func(t *testing.T) {
 		mockUserRepository := &userRepo.UserRepositoryMock{}
 		mockBcryptService := &phService.BCryptServiceMock{}
 		mockJWTService := &authService.JwtServiceMock{}
 
-		email := "test@ranggarifqi.com"
 		signInDTO := auth.SignInDTO{
 			Email:    email,
 			Password: "rawpassword",
 		}
 
-		id, _ := uuid.NewV4()
-		fullName := "Test User"
 		tokenResult := "thisisjwttoken"
-
-		findOneResult := &user.User{
-			ID:       id,
-			Email:    email,
-			Password: "thisisanencryptedpassword",
-			FullName: fullName,
-		}
 
 		expectedResult := &auth.SignInResult{
 			UserWithoutPassword: user.UserWithoutPassword{
@@ -69,7 +70,7 @@ func Test_Auth_Usecase_SignIn(t *testing.T) {
 		mockBcryptService := &phService.BCryptServiceMock{}
 		mockJWTService := &authService.JwtServiceMock{}
 
-		email := "random.email@asd.com"
+		email = "random.email@asd.com"
 
 		signInDTO := auth.SignInDTO{
 			Email:    email,
@@ -80,6 +81,31 @@ func Test_Auth_Usecase_SignIn(t *testing.T) {
 		findOneError := errors.New(errMsg)
 
 		mockUserRepository.On("FindOne", "email = ?", []interface{}{email}).Return(nil, findOneError)
+
+		usecase := NewAuthUsecase(mockUserRepository, mockJWTService, mockBcryptService)
+
+		result, err := usecase.SignIn(&signInDTO)
+
+		assert.Nil(t, result)
+		assert.NotNil(t, err)
+		assert.EqualError(t, err, errMsg)
+	})
+
+	t.Run("Should return error if correct email but wrong password", func(t *testing.T) {
+		mockUserRepository := &userRepo.UserRepositoryMock{}
+		mockBcryptService := &phService.BCryptServiceMock{}
+		mockJWTService := &authService.JwtServiceMock{}
+
+		signInDTO := auth.SignInDTO{
+			Email:    email,
+			Password: "wrongpassword",
+		}
+
+		errMsg := "crypto/bcrypt: hashedPassword is not the hash of the given password"
+		comparePasswordErr := errors.New(errMsg)
+
+		mockUserRepository.On("FindOne", "email = ?", []interface{}{email}).Return(findOneResult, nil)
+		mockBcryptService.On("ComparePassword", findOneResult.Password, signInDTO.Password).Return(false, comparePasswordErr)
 
 		usecase := NewAuthUsecase(mockUserRepository, mockJWTService, mockBcryptService)
 
