@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -14,6 +15,7 @@ import (
 	authService "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/auth/services"
 	authUC "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/auth/usecase"
 	phService "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/passwordhasher/services"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/response"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user"
 	userRepo "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user/repository"
 	myValidator "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/validator"
@@ -77,12 +79,20 @@ func Test_Auth_Handler_SignIn(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPost, "/api/v1/signin", strings.NewReader(jsonBody))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
-
 		ctx := e.NewContext(req, rec)
 
+		/* Assertion */
 		err := handler.SignIn(ctx)
+
+		res := response.SuccessResponse{}
+		json.Unmarshal([]byte(rec.Body.String()), &res)
+
+		resData, _ := res.Data.(map[string]interface{})
 
 		assert.Nil(t, err)
 		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, http.StatusOK, res.StatusCode)
+		assert.Equal(t, "User signed in successfully", res.Message)
+		assert.Equal(t, tokenResult, resData["token"])
 	})
 }
