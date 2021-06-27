@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -116,13 +115,42 @@ func Test_Auth_Handler_SignIn(t *testing.T) {
 
 		/* Assertion */
 		if assert.NoError(t, handler.SignIn(ctx)) {
-			fmt.Println(rec)
 			res := response.ErrorResponse{}
 			json.Unmarshal([]byte(rec.Body.String()), &res)
 
 			assert.Equal(t, http.StatusBadRequest, rec.Code)
 			assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 			assert.Equal(t, "Key: 'SignInDTO.Password' Error:Field validation for 'Password' failed on the 'required' tag", res.Message)
+		}
+	})
+
+	t.Run("Should return bad request error if invalid email", func(t *testing.T) {
+		/* Setup Mocks */
+		mocks := setupMock()
+
+		/* Setup Handler */
+		usecase := authUC.NewAuthUsecase(mocks.mockUserRepository, mocks.mockJWTService, mocks.mockBcryptService)
+		handler := &AuthHandler{
+			authUsecase: usecase,
+		}
+
+		/* Setup request */
+		e := setupEcho()
+		jsonBody := `{"email": "notanemail", "password": "correctpassword"}`
+
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/signin", strings.NewReader(jsonBody))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+
+		/* Assertion */
+		if assert.NoError(t, handler.SignIn(ctx)) {
+			res := response.ErrorResponse{}
+			json.Unmarshal([]byte(rec.Body.String()), &res)
+
+			assert.Equal(t, http.StatusBadRequest, rec.Code)
+			assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+			assert.Equal(t, "Key: 'SignInDTO.Email' Error:Field validation for 'Email' failed on the 'email' tag", res.Message)
 		}
 	})
 }
