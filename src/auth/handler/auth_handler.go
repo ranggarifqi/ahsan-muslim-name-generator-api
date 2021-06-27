@@ -10,19 +10,19 @@ import (
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/response"
 )
 
-type authHandler struct {
+type AuthHandler struct {
 	authUsecase auth.IAuthUsecase
 }
 
 func NewAuthHandler(g *echo.Group, auc auth.IAuthUsecase) {
-	handler := &authHandler{
+	handler := &AuthHandler{
 		authUsecase: auc,
 	}
 
 	g.POST("/signin", handler.SignIn)
 }
 
-func (h *authHandler) SignIn(c echo.Context) error {
+func (h *AuthHandler) SignIn(c echo.Context) error {
 	payload := new(auth.SignInDTO)
 	err := c.Bind(payload)
 	if err != nil {
