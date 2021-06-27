@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -82,17 +83,46 @@ func Test_Auth_Handler_SignIn(t *testing.T) {
 		ctx := e.NewContext(req, rec)
 
 		/* Assertion */
-		err := handler.SignIn(ctx)
+		if assert.NoError(t, handler.SignIn(ctx)) {
+			res := response.SuccessResponse{}
+			json.Unmarshal([]byte(rec.Body.String()), &res)
+			resData, _ := res.Data.(map[string]interface{})
 
-		res := response.SuccessResponse{}
-		json.Unmarshal([]byte(rec.Body.String()), &res)
+			assert.Equal(t, http.StatusOK, rec.Code)
+			assert.Equal(t, http.StatusOK, res.StatusCode)
+			assert.Equal(t, "User signed in successfully", res.Message)
+			assert.Equal(t, tokenResult, resData["token"])
+		}
+	})
 
-		resData, _ := res.Data.(map[string]interface{})
+	t.Run("Should return bad request error if password not specified", func(t *testing.T) {
+		/* Setup Mocks */
+		mocks := setupMock()
 
-		assert.Nil(t, err)
-		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, http.StatusOK, res.StatusCode)
-		assert.Equal(t, "User signed in successfully", res.Message)
-		assert.Equal(t, tokenResult, resData["token"])
+		/* Setup Handler */
+		usecase := authUC.NewAuthUsecase(mocks.mockUserRepository, mocks.mockJWTService, mocks.mockBcryptService)
+		handler := &AuthHandler{
+			authUsecase: usecase,
+		}
+
+		/* Setup request */
+		e := setupEcho()
+		jsonBody := `{"email": "test@ranggarifqi.com"}`
+
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/signin", strings.NewReader(jsonBody))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+
+		/* Assertion */
+		if assert.NoError(t, handler.SignIn(ctx)) {
+			fmt.Println(rec)
+			res := response.ErrorResponse{}
+			json.Unmarshal([]byte(rec.Body.String()), &res)
+
+			assert.Equal(t, http.StatusBadRequest, rec.Code)
+			assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+			assert.Equal(t, "Key: 'SignInDTO.Password' Error:Field validation for 'Password' failed on the 'required' tag", res.Message)
+		}
 	})
 }
