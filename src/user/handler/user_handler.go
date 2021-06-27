@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/helper"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/middleware"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/response"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user"
 )
@@ -16,7 +17,7 @@ type userHandler struct {
 func NewUserHandler(g *echo.Group, uc user.IUserUsecase) {
 	handler := &userHandler{uc}
 
-	g.GET("/users/:id", handler.FindById)
+	g.GET("/users/:id", handler.FindById, middleware.UseJWTAuth())
 }
 
 func (uh *userHandler) FindById(c echo.Context) error {
