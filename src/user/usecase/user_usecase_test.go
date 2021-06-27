@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -10,12 +11,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type Mocks struct {
+	mockUserRepository *repository.UserRepositoryMock
+}
+
+func setupMocks() Mocks {
+	return Mocks{
+		mockUserRepository: &repository.UserRepositoryMock{},
+	}
+}
+
 func Test_User_Usecase_FindById(t *testing.T) {
-	mockUserRepo := &repository.UserRepositoryMock{}
 	now, _ := time.Parse("2006-01-02", "2021-01-01")
 
 	t.Run("Should return user data without password if found", func(t *testing.T) {
 		id, _ := uuid.NewV4()
+
+		/* Setup Mocks */
+		mocks := setupMocks()
 
 		returnValue := &user.User{
 			ID:        id,
@@ -25,9 +38,9 @@ func Test_User_Usecase_FindById(t *testing.T) {
 			CreatedAt: now,
 			UpdatedAt: now,
 		}
-		mockUserRepo.On("FindById", id.String()).Return(returnValue, nil)
+		mocks.mockUserRepository.On("FindById", id.String()).Return(returnValue, nil)
 
-		usecase := NewUserUsecase(mockUserRepo)
+		usecase := NewUserUsecase(mocks.mockUserRepository)
 
 		result, err := usecase.FindById(id.String())
 
@@ -40,5 +53,23 @@ func Test_User_Usecase_FindById(t *testing.T) {
 			CreatedAt: now,
 			UpdatedAt: now,
 		}, result)
+	})
+
+	t.Run("Should return record not found error if ID not found", func(t *testing.T) {
+		randomID, _ := uuid.NewV4()
+
+		/* Setup mocks */
+		mocks := setupMocks()
+		mocks.mockUserRepository.On("FindById", randomID.String()).Return(nil, errors.New("record not found"))
+
+		/* Setup usecase */
+		usecase := NewUserUsecase(mocks.mockUserRepository)
+
+		/* Assertion */
+		result, err := usecase.FindById(randomID.String())
+
+		assert.NotNil(t, err)
+		assert.Nil(t, result)
+		assert.EqualError(t, err, "record not found")
 	})
 }
