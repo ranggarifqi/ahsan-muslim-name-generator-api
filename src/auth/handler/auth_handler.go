@@ -26,7 +26,7 @@ func (h *AuthHandler) SignIn(c echo.Context) error {
 	payload := new(auth.SignInDTO)
 	err := c.Bind(payload)
 	if err != nil {
-		return helper.HandleHttpError(c, err, http.StatusInternalServerError)
+		return helper.HandleHttpError(c, err, http.StatusBadRequest)
 	}
 
 	if err = c.Validate(payload); err != nil {
