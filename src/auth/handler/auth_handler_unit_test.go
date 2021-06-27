@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -151,6 +152,38 @@ func Test_Auth_Handler_SignIn(t *testing.T) {
 			assert.Equal(t, http.StatusBadRequest, rec.Code)
 			assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 			assert.Equal(t, "Key: 'SignInDTO.Email' Error:Field validation for 'Email' failed on the 'email' tag", res.Message)
+		}
+	})
+
+	t.Run("Should return unauthorized error if using wrong credential", func(t *testing.T) {
+		/* Setup Mocks */
+		mocks := setupMock()
+		mocks.mockUserRepository.On("FindOne", "email = ?", []interface{}{email}).Return(findOneResult, nil)
+		mocks.mockBcryptService.On("ComparePassword", findOneResult.Password, "incorrectpassword").Return(false, errors.New("adsadsad"))
+
+		/* Setup Handler */
+		usecase := authUC.NewAuthUsecase(mocks.mockUserRepository, mocks.mockJWTService, mocks.mockBcryptService)
+		handler := &AuthHandler{
+			authUsecase: usecase,
+		}
+
+		/* Setup request */
+		e := setupEcho()
+		jsonBody := `{"email": "test@ranggarifqi.com", "password": "incorrectpassword"}`
+
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/signin", strings.NewReader(jsonBody))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+
+		/* Assertion */
+		if assert.NoError(t, handler.SignIn(ctx)) {
+			res := response.ErrorResponse{}
+			json.Unmarshal([]byte(rec.Body.String()), &res)
+
+			assert.Equal(t, http.StatusUnauthorized, rec.Code)
+			assert.Equal(t, http.StatusUnauthorized, res.StatusCode)
+			assert.Equal(t, "Incorrect email or password!", res.Message)
 		}
 	})
 }
