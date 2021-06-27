@@ -72,4 +72,22 @@ func Test_User_Usecase_FindById(t *testing.T) {
 		assert.Nil(t, result)
 		assert.EqualError(t, err, "record not found")
 	})
+
+	t.Run("Should return postgresql syntax error if invalid UUID", func(t *testing.T) {
+		invalidID := "invalidID"
+
+		/* Setup mocks */
+		mocks := setupMocks()
+		mocks.mockUserRepository.On("FindById", invalidID).Return(nil, errors.New(`ERROR: invalid input syntax for type uuid: "invalidID" (SQLSTATE 22P02)`))
+
+		/* Setup usecase */
+		usecase := NewUserUsecase(mocks.mockUserRepository)
+
+		/* Assertion */
+		result, err := usecase.FindById(invalidID)
+
+		assert.NotNil(t, err)
+		assert.Nil(t, result)
+		assert.Contains(t, err.Error(), "invalid input syntax for type uuid")
+	})
 }
