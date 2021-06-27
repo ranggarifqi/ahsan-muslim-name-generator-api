@@ -1,28 +1,31 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/helper"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/middleware"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/response"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user"
 )
 
-type userHandler struct {
+type UserHandler struct {
 	uc user.IUserUsecase
 }
 
 func NewUserHandler(g *echo.Group, uc user.IUserUsecase) {
-	handler := &userHandler{uc}
+	handler := &UserHandler{uc}
 
-	g.GET("/users/:id", handler.FindById)
+	g.GET("/users/:id", handler.FindById, middleware.UseJWTAuth())
 }
 
-func (uh *userHandler) FindById(c echo.Context) error {
+func (uh *UserHandler) FindById(c echo.Context) error {
 	id := c.Param("id")
 	res, err := uh.uc.FindById(id)
 	if err != nil {
+		err := errors.New("User not found")
 		return helper.HandleHttpError(c, err, http.StatusNotFound)
 	}
 	return c.JSON(http.StatusOK, response.SuccessResponse{
