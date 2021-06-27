@@ -1,6 +1,8 @@
 package usecase
 
-import "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user"
+import (
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user"
+)
 
 type userUsecase struct {
 	ur user.IUserRepository
@@ -24,12 +26,7 @@ func (uuc *userUsecase) FindById(id string) (*user.UserWithoutPassword, error) {
 		FullName:  u.FullName,
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
-		DeletedAt: u.DeletedAt,
 	}
 
 	return res, nil
-}
-
-func (uuc *userUsecase) SignIn(payload *user.SignInDTO) (*user.SignInResult, error) {
-	return nil, nil
 }
