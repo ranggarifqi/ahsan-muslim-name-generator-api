@@ -4,7 +4,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/auth"
 )
 

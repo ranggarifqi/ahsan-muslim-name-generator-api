@@ -24,9 +24,14 @@ func main() {
 	e := echo.New()
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:8000", "https://qashir.ranggarifqi.com"},
+		AllowOrigins: []string{"http://localhost:8000", "https://ahsan.ranggarifqi.com"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
+
+	// e.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+	// 	SigningKey:  os.Getenv("JWT_SECRET"),
+	// 	TokenLookup: "header:Authorization",
+	// }))
 
 	e.Validator = myValidator.NewMyValidator()
 
