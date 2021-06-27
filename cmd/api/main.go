@@ -28,11 +28,6 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 
-	// e.Use(middleware.JWTWithConfig(middleware.JWTConfig{
-	// 	SigningKey:  os.Getenv("JWT_SECRET"),
-	// 	TokenLookup: "header:Authorization",
-	// }))
-
 	e.Validator = myValidator.NewMyValidator()
 
 	db := postgresql.InitDB()
