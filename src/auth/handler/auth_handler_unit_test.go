@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -205,8 +204,6 @@ func Test_Auth_Handler_SignIn(t *testing.T) {
 		if assert.NoError(t, handler.SignIn(ctx)) {
 			res := response.ErrorResponse{}
 			json.Unmarshal([]byte(rec.Body.String()), &res)
-
-			fmt.Println(rec)
 
 			assert.Equal(t, http.StatusBadRequest, rec.Code)
 			assert.Equal(t, http.StatusBadRequest, res.StatusCode)
