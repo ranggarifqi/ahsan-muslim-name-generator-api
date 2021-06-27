@@ -13,6 +13,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/helper/testutil"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/auth"
 	authService "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/auth/services"
 	authUC "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/auth/usecase"
@@ -20,7 +21,6 @@ import (
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/response"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user"
 	userRepo "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/user/repository"
-	myValidator "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/validator"
 )
 
 type Mocks struct {
@@ -35,12 +35,6 @@ func setupMock() Mocks {
 		&phService.BCryptServiceMock{},
 		&authService.JwtServiceMock{},
 	}
-}
-
-func setupEcho() *echo.Echo {
-	e := echo.New()
-	e.Validator = myValidator.NewMyValidator()
-	return e
 }
 
 func Test_Auth_Handler_SignIn(t *testing.T) {
@@ -75,7 +69,7 @@ func Test_Auth_Handler_SignIn(t *testing.T) {
 		}
 
 		/* Setup request */
-		e := setupEcho()
+		e := testutil.SetupServer()
 		jsonBody := `{"email": "test@ranggarifqi.com", "password": "correctpassword"}`
 
 		req := httptest.NewRequest(http.MethodPost, "/api/v1/signin", strings.NewReader(jsonBody))
@@ -107,7 +101,7 @@ func Test_Auth_Handler_SignIn(t *testing.T) {
 		}
 
 		/* Setup request */
-		e := setupEcho()
+		e := testutil.SetupServer()
 		jsonBody := `{"email": "test@ranggarifqi.com"}`
 
 		req := httptest.NewRequest(http.MethodPost, "/api/v1/signin", strings.NewReader(jsonBody))
@@ -137,7 +131,7 @@ func Test_Auth_Handler_SignIn(t *testing.T) {
 		}
 
 		/* Setup request */
-		e := setupEcho()
+		e := testutil.SetupServer()
 		jsonBody := `{"email": "notanemail", "password": "correctpassword"}`
 
 		req := httptest.NewRequest(http.MethodPost, "/api/v1/signin", strings.NewReader(jsonBody))
@@ -169,7 +163,7 @@ func Test_Auth_Handler_SignIn(t *testing.T) {
 		}
 
 		/* Setup request */
-		e := setupEcho()
+		e := testutil.SetupServer()
 		jsonBody := `{"email": "test@ranggarifqi.com", "password": "incorrectpassword"}`
 
 		req := httptest.NewRequest(http.MethodPost, "/api/v1/signin", strings.NewReader(jsonBody))
@@ -199,7 +193,7 @@ func Test_Auth_Handler_SignIn(t *testing.T) {
 		}
 
 		/* Setup request */
-		e := setupEcho()
+		e := testutil.SetupServer()
 		jsonBody := `{"email": "test@ranggarifqi.com", "password": "incorrectpassword",,,,,,,,,}`
 
 		req := httptest.NewRequest(http.MethodPost, "/api/v1/signin", strings.NewReader(jsonBody))
