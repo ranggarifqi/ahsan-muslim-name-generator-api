@@ -11,5 +11,8 @@ type JwtServiceMock struct {
 
 func (s *JwtServiceMock) GetAuthToken(claim *auth.AuthClaim) (*string, error) {
 	args := s.Called(claim)
-	return args.Get(0).(*string), args.Error(1)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*string), nil
 }

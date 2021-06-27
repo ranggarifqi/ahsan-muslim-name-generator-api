@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/gofrs/uuid"
@@ -13,20 +14,20 @@ import (
 )
 
 func Test_Auth_Usecase_SignIn(t *testing.T) {
-	mockUserRepository := &userRepo.UserRepositoryMock{}
-	mockBcryptService := &phService.BCryptServiceMock{}
-	mockJWTService := &authService.JwtServiceMock{}
+	t.Run("Should return correct value on successfull sign in", func(t *testing.T) {
+		mockUserRepository := &userRepo.UserRepositoryMock{}
+		mockBcryptService := &phService.BCryptServiceMock{}
+		mockJWTService := &authService.JwtServiceMock{}
 
-	t.Run("Should signed in successfully", func(t *testing.T) {
-		id, _ := uuid.NewV4()
 		email := "test@ranggarifqi.com"
-		fullName := "Test User"
-		tokenResult := "thisisjwttoken"
-
 		signInDTO := auth.SignInDTO{
 			Email:    email,
 			Password: "rawpassword",
 		}
+
+		id, _ := uuid.NewV4()
+		fullName := "Test User"
+		tokenResult := "thisisjwttoken"
 
 		findOneResult := &user.User{
 			ID:       id,
@@ -59,6 +60,33 @@ func Test_Auth_Usecase_SignIn(t *testing.T) {
 		result, err := usecase.SignIn(&signInDTO)
 
 		assert.Nil(t, err)
+		assert.NotNil(t, result)
 		assert.Equal(t, expectedResult, result)
+	})
+
+	t.Run("Should return error if wrong email", func(t *testing.T) {
+		mockUserRepository := &userRepo.UserRepositoryMock{}
+		mockBcryptService := &phService.BCryptServiceMock{}
+		mockJWTService := &authService.JwtServiceMock{}
+
+		email := "random.email@asd.com"
+
+		signInDTO := auth.SignInDTO{
+			Email:    email,
+			Password: "rawpassword",
+		}
+
+		errMsg := "record not found"
+		findOneError := errors.New(errMsg)
+
+		mockUserRepository.On("FindOne", "email = ?", []interface{}{email}).Return(nil, findOneError)
+
+		usecase := NewAuthUsecase(mockUserRepository, mockJWTService, mockBcryptService)
+
+		result, err := usecase.SignIn(&signInDTO)
+
+		assert.Nil(t, result)
+		assert.NotNil(t, err)
+		assert.EqualError(t, err, errMsg)
 	})
 }
