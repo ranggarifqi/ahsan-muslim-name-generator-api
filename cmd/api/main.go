@@ -8,7 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/database/postgresql"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/helper/database/postgresql"
 	authH "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/auth/handler"
 	authService "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/auth/services"
 	authUC "github.com/ranggarifqi/ahsan-muslim-name-generator-api/src/auth/usecase"

@@ -40,7 +40,7 @@ stop-docker:
 
 # Test
 test:
-	go test -v ./...
+	go test -v ./src/...
 
 # Bash
 bash:

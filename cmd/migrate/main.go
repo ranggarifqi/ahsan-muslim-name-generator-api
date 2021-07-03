@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/pressly/goose"
-	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/database/postgresql"
 	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/helper"
+	"github.com/ranggarifqi/ahsan-muslim-name-generator-api/helper/database/postgresql"
 
 	_ "github.com/lib/pq"
 )
